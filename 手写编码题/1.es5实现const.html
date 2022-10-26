@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    const的特性
+        用于声明一个常量，
+        在块级作用域内有效，不能预处理，不存在变量提升，即未声明之前的代码不能调用
+        不能重复声明
+        不允许修改绑定，但允许修改值
+        声明时必须进行初始化(赋值)
+    <script>
+        function _const(key, value) {
+            if (window.hasOwnProperty(key)) {
+                throw TypeError(`Cannot redefine property: ${key}`) // 不能重新声明
+            }
+            if (!value) {
+                throw TypeError('声明时必须初始化即需要赋值') // 声明时必须初始化即需要赋值
+            }
+            window[key] = value;
+            Object.defineProperty(window, key, {
+                enumerator: false,
+                configurable: false,
+                get: function () {
+                return value;
+                },
+                set: function (newValue) {
+                    if (newValue !== value) {
+                        throw TypeError('这是只读变量不可修改') // 只读变量不可修改
+                    } else {
+                        return value
+                    }
+                    }
+                })
+                }
+    _const('a', { avlaue: 'aaa' })
+    a.avalue = 'aaa2'
+    // a='aaa2' //报错 Uncaught TypeError: 这是只读变量不可修改
+// _const('a', { avlaue: 'aaa2' }) // Cannot redefine property: a 不能重新声明
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
