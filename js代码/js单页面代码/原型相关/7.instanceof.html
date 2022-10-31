@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>instanceof</title>
+</head>
+<body>
+    <script>
+        let a= 1
+      let falg= 1 instanceof Number
+     console.log( a.__proto__ ) 
+     console.log( falg ) 
+     console.log( falg ) 
+        function myInstanceof(left,right){
+            let child=left.__proto__
+            let fat=right.prototype
+            while(child){
+                if(child===fat){
+                    return true
+                }
+                child=child.__proto__
+            }
+            return false
+        }
+
+
+
+    </script>
+    
+</body>
+</html>

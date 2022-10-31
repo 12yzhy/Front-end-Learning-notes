@@ -1,0 +1,64 @@
+<script>
+/* 
+
+可参考  https://juejin.cn/post/7072528644739956773#heading-15
+这里需要考虑 还考虑了内置对象比如 Date、RegExp等对象、 处理 Symbol和函数以及解决了循环引用的问题。
+
+
+for in obj换成 Reflect.ownKey(obj)  ==>便于复制keys是Symbol类型的属性
+Reflect.ownKeys 方法返回一个由目标对象自身的属性键组成的数组。
+它的返回值等同于Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target))。
+
+
+
+
+Object.getOwnPropertyNames(target)  ==>一个对象，其自身的可枚举和不可枚举属性的名称被返回(原型链上不管)
+Object.prototype.hasOwnProperty()===>方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性（也就是，是否有指定的键) 
+                多于for in 很Object.keys()搭配（这两个会获取到原型链上的可枚举属性，不过可以使用hasOwnProperty()方法过滤掉
+*/
+
+
+
+function deepClone(obj,hash=new WeakMap()){  // 额外开辟一个存储空间WeakMap来存储当前对象
+ 
+        if(typeof obj !=='object'||obj===null){
+            return obj
+        }
+        if(obj instanceof Date)return new Date(obj)
+        if(obj instanceof RegExp)return new RegExp(obj)
+        // if (obj instanceof HTMLElement) return obj 
+       
+// 解决循环引用
+        if (hash.get(obj)) return hash.get(obj) // 当需要拷贝当前对象时，先去存储空间中找，如果有的话直接返回
+
+
+    // let temp= Array.isArray(obj)?[]:{} //或者 实例的 constructor 其实就是构造函数，
+     let temp =new obj.constructor()// 创建一个新的克隆对象或克隆数组
+   
+
+     hash.set(obj, temp) // 如果存储空间中没有就存进 hash 里
+   
+   
+     // for(let key in obj){ // 换成 Reflect.ownKey便于复制keys是Symbol类型的属性
+
+          Reflect.ownKeys(obj).forEach(key => { 
+            temp[key]= deepClone(obj[key],hash)  
+            })
+        return temp
+}
+const obj = {a:1}
+const name = Symbol('name')
+obj.key1='zheng'
+obj[name] = 'lin' // Symbol 作为键
+obj.obj = obj //这里有循环引用
+obj.c=function(){
+    console.log('first')
+}
+const newObj = deepClone(obj)
+
+console.log(newObj) // {}
+
+</script>
+
+
+

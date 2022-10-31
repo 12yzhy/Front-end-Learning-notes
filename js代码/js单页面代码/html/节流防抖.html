@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="btn1">防抖</button>
+    <script>
+        var btn=document.querySelector('.btn1')
+        function test (){
+            console.log('this1==>',)
+        }
+    
+        btn.addEventListener('click',denbouce(test,3000))
+        // 节流 1
+        function throttle (fn,delay=2000){
+            let flag=true
+            return function(){
+                if(!flag) return
+                flag=false 
+                setTimeout(()=>{
+                        fn.apply(this,arguments)
+                        flag=true
+                },delay)
+            }
+        }
+        // 节流 1
+        function throttle1 (fn,delay=2000){
+            let prev=new Date().getTime()
+            return function(){
+                let now=new Date().getTime()
+                // 再次进入的时间-首次时间>时长，函数触发，再将现在时间赋给首次
+               if(now-prev>=delay){
+                        fu.apply(this,arguments)
+                        perv=now
+               }
+            }
+        }
+        function denbouce(fn,delay=2000){
+            let timer=null
+            return function(){
+                // 二次进入有这个定时器就清空这个定时器重新计时
+                console.log('timer1==>',timer)
+                if(timer) clearTimeout(timer)
+                timer=setTimeout(()=>{
+                    fn.apply(this,arguments)
+                },delay)
+            }
+        }
+      
+   
+            
+      
+
+
+
+
+    </script>
+    
+</body>
+</html>

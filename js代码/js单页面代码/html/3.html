@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let arr = [
+            // 级连 和 选择用的
+            {
+                value: 'zhejiang',
+                label: 'Zhejiang',
+                children: [
+                    {
+                        value: 'hangzhou',
+                        label: 'Hangzhou',
+                        children: [
+                            {
+                                value: 'xihu',
+                                label: 'West Lake',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                value: 'jiangsu',
+                label: 'Jiangsu',
+                children: [
+                    {
+                        value: 'nanjing',
+                        label: 'Nanjing',
+                        children: [
+                            {
+                                value: 'zhonghuamen',
+                                label: 'Zhong Hua Men',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                value: 'hunan',
+                label: 'Hunan',
+            },
+            {
+                value: 'anhui',
+                label: 'Anhui',
+            },
+            {
+                value: 'hubei',
+                label: 'AnhHubei',
+            },
+            {
+                value: 'chizhou',
+                label: 'Chizhou',
+            },
+        ];
+        function treeFindPath(tree, func, path = []) {
+            if (!tree) return []
+            for (const data of tree) {
+                path.push(data.value)
+                // 满足条件直接抛出
+                if (func(data)) return path
+                if (data.children) {
+                    const findChildren = treeFindPath(data.children, func, path)
+                     // 有返回值才执行，最终返回findChildren
+                    if (findChildren.length) return findChildren
+                }
+                path.pop()
+            }
+            return []
+        }
+        console.log(treeFindPath(arr, el => el.value === 'zhonghuamen'))
+
+
+        // function treeFindPath(tree, menuid) {
+        //     var path = [];
+        //     if (!tree) return [];
+        //     var forFn = function (tree, menuid) {
+        //         for (var i = 0; i < tree.length; i++) {
+        //             // 存放最后返回的内容,返回text集合
+        //             var data = tree[i];
+        //             path.push(data.id);
+        //             if (data.id === menuid) return path;
+        //             if (data.children) {
+        //                 const findChildren = forFn(data.children, menuid);
+        //                 // 有返回值才执行，最终返回findChildren
+        //                 if (findChildren) return findChildren
+        //             }
+        //             path.pop()
+        //         }
+        //     }
+        //     forFn(tree, menuid);
+        //     return path;
+        // }
+
+
+
+    </script>
+
+</body>
+
+</html>

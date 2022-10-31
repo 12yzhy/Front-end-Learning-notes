@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 手写call,bind,apply
+
+        // 原理：当函数作为对象的属性并由对象调用，可以改变这个函数的this指向,这就叫隐式绑定
+        Function.prototype.myCall = function () {
+            console.log('1==>',arguments)
+
+            let _o = arguments[0]
+            _o.fn = this
+            //获取传入剩余参数数组
+            let args=[...arguments].slice(1)
+            _o.fn(args)
+        }
+        let obj = {
+            name: '张商',
+            age: 18
+        }
+        function fn(){
+            console.log(this)
+            console.log(this)
+            console.log(arguments[0])
+        }
+        fn.myCall(obj,1,2,3,'kk')
+
+
+
+
+
+    </script>
+</body>
+
+</html>

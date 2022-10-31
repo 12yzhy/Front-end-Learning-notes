@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        
+        var arr=[
+            {id:1,
+            pid:0,
+            name:'集团总部'
+             },
+            {id:2,
+            pid:1,
+            name:'北京分公司'
+             },
+            {id:3,
+            pid:1,
+            name:'上海分公司'
+             },
+            {id:4,
+            pid:1,
+            name:'深圳分公司'
+             },
+            {id:5,
+            pid:1,
+            name:'成都分公司'
+             },
+            {id:6,
+            pid:2,
+            name:'昌平办事处'
+             },
+            {id:6,
+            pid:2,
+            name:'东城办事处'
+             },
+            ]
+           function treeSort(tararr,f){
+            let newArr=[]
+            tararr.forEach(el => {
+                if(el.pid===f){
+                    newArr.push(el)
+                     let children=treeSort(tararr,el.id)
+                     el.children= children.length?children:[]
+                }
+            });
+            console.log(newArr)
+            return newArr
+
+           }
+            treeSort(arr,0)
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

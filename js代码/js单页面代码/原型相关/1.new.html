@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手写new</title>
+</head>
+<body>
+    <script>
+       /*   1创建一个空对象，
+        2.将空对象的原型属性指向构造函数的原型
+        3.将构造函数的this指向空对象
+          如果构造函数有返回值，那么只返回构造函数返回的对象。
+        4.返回这个空对象
+        
+        */
+       function myNew(){
+            const obj=new Object() //创建一个新的对象，并返回。符合new函数的功能。
+            Constructor=Array.prototype.shift.call(arguments) //截取传入myNew函数的第一个参数 (他就是构造函数)
+            if(!Constructor.hasOwnProperty('prototype')){
+              throw new TypeError('Constructor不是构造函数')
+            }
+            // shift从前面删除 返回删除的元素
+            obj.__proto__=Constructor.prototype
+           let ret= Constructor.apply(obj,arguments)
+          //  如果返回值是个对象就返回这个对象，若不是就返回自己建的空对象
+            return typeof ret==='object'?ret:obj
+       }
+       var a=112
+      //  let a=112
+       console.log(a)
+
+       function b(){
+           let a=222
+           console.log(this,this.a) //112   b函数被windows调用，this指向window
+           console.log(a)//222
+       }
+       b()
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

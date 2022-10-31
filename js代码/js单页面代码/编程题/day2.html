@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    函数柯里化，最大好处就是参数复用
+    实现一个函数如下效果：
+
+add(1)(2)(3) //6
+add(1,2,3)(4)//10
+add(1,2)(3)(4)(5)//15
+    <script>
+        function add(){
+            // 1保存传入的参数(arguments是伪数组要转成数组) 
+            // Array.prototype.slice.call(arguments)
+            let args=Array.from(arguments) 
+            // 2这里执行第二个括号
+            let inner=function(){
+                // 将第二个括号的值传入数组保存
+                args.push(...arguments )
+                // let sum=args.reduce((p,n)=>p+n)
+                // return sum
+                return inner
+            }
+            inner.toString=function(){
+                return args.reduce((p,n)=>p+n)
+            }
+          
+            return inner
+        }
+        console.log(add(1)(2)(3)+'')
+        console.log(add(1)(2,3)(4)+'')
+        console.log(add(1)(2)(3)(4,5)+'')
+        const o={
+            a:'qqq'
+        }
+        o={}
+    console.log(o)
+
+    
+
+
+
+
+        
+    </script>
+    
+</body>
+</html>

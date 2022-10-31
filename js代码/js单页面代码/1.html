@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 如果需要获取一个函数中异步操作的结果，则必须通过回调函数来获取
+        function fn(callback) {
+            //1、相当于先传递一个函数进来
+            // var callback=function(data){console.log(data) }
+            setTimeout(() => {
+                var data = '拿到异步'
+                // 2、在合适的地方调用传进来的函数
+                callback(data)
+            }, 1000)
+        }
+        fn(function (data) {
+            console.log(data)
+        })
+            let obj={
+                a:1,
+                b:3
+            }
+                 let s= Object.entries(obj)
+                 let s1= Object.keys(obj)
+                 let s2= Object.values(obj)
+                 console.log(s,s1,s2)
+       
+
+    </script>
+
+</body>
+
+</html>

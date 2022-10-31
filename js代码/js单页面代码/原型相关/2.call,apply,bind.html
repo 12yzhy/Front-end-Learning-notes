@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>call,bind,apply</title>
+</head>
+<body>
+    <script>
+   
+
+        function afun (){
+            console.log(this)
+            console.log(this.name)
+        }
+        var obj={
+            name:'张三'  
+        }
+        afun.call(obj)
+             /*  手写call（注意理解）
+       隐式绑定： 函数作为对象的属性被对象调用，可以改变函数的this 
+        // 例子：
+        var obj1={
+            age:'17'
+        }
+        function bfn(){
+            console.log(this)
+            console.log(this.age)
+        }
+        obj1.fn=bfn
+        obj1.fn()
+        */
+    /* 函数作为对象的属性被对象调用可以改函数的this指向 */
+       Function.prototype.myCall=function(){
+        // 获取参数对象
+            console.log(arguments[0])
+            let _o=arguments[0]
+            console.log(this)//现在的this指向调用myCall的fn函数
+            // #### （这一步是重点）改变this指向到_o上 
+            //  隐式绑定
+            _o.fn1=this   //******>>>>>!主要
+            // 传递剩余参数
+            let arg=[...arguments].slice(1)
+           let req= _o.fn1(arg) //******!>>>>主要
+           return req
+       }
+       function fn(){
+        console.log('mycall==>',this.name,this.age)
+            console.log(arguments[0])
+       }
+       let obj3={
+        name:'yzhy',
+        age:"25"
+       }
+       fn.myCall(obj3,1,2,3,4   )
+        let ar1=Array.from(Array(10),(v,k)=>k)
+        console.log(ar1)
+        console.log('obj3==>',Reflect.ownKeys(obj3))
+        // ----------------------------------------------------
+       Function.prototype.myApply=function(){
+        // 先判断调用者是不是函数，第二个参数是数组吗
+            if(typeof this!=="function") {
+                throw new TypeError('not a funtion')
+            }
+            if(!Array.isArray(arguments[1])){
+                throw new TypeError('第二个参数不是数组!')
+            }
+             tar=arguments[0]||window
+             tar.fn=this
+             let reg=tar.fn(arguments[1])
+             return reg
+
+       }
+       console.log('>>>>>>>>>>')
+       const ob = { name: 123 };
+        function foo(...args) {
+        console.log(this.name, args);
+        }
+        foo.prototype.name = 'ZHN';
+        const s1 = [1, 2, 3, 4, 5];
+       
+        const s = foo.myApply(ob,s1);
+        console.log('<<<<<<<<<<<<<<<<')
+
+
+
+
+
+
+
+
+
+
+
+        // -----------------------------------------------------------
+        // ?自定义实现 bind ===>最简单方案 利用call
+        // 方法一
+        Function.prototype.myBind=function(obj,...args){
+                return (...rest)=>this.call(obj,...args,...rest)
+        }
+        function f (arg) {
+        console.log(this.a, arg)
+        }
+
+        // output: 3, 4
+        f.bind({ a: 3 })(4)
+
+        // output: 3, 4
+        f.myBind({ a: 3 })(4)
+        ;(function(){
+
+        })()
+
+
+
+
+
+
+
+
+ 
+
+    </script>
+    
+</body>
+</html>

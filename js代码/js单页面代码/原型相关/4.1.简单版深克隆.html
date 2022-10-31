@@ -1,0 +1,41 @@
+<script>
+//1 实现最简单的深拷贝
+//  步骤==》1，判断是否为基础类型（判断是不是个对象）
+function deepClone(obj){
+    // 1，判断是否为基础类型（判断是不是个对象）
+    // 基本数据类型直接返回
+        if(typeof obj !=='object'||obj==null){
+            return obj
+        }
+        // 2引用数据类型特殊处理
+    
+    // 判断数组还是对象
+    // let temp= obj instanceof Array?[]:{}
+    let temp= Array.isArray(obj)?[]:{}
+    for(let key in obj){
+        // 这里只拷贝自身对象上的属性，不拷贝原型链的
+        if(obj.hasOwnProperty(key)){
+            // 这里要递归调用 防止第二层还是个引用类型值
+            temp[key]= deepClone(obj[key])  
+        }
+    }
+        return temp
+}
+/* 
+        用for...in循环会获取到原型链上的可枚举属性，不过可以使用hasOwnProperty()方法过滤掉继承属性。
+
+
+*/
+const a = {
+    name: 'lin',
+    age: 23,
+    hobbies: { sports: '篮球', tv: '雍正王朝' },
+    works: ['2020', '2021']
+}
+const b = deepClone(a)
+b.name='正'
+b.hobbies.tv="xxx"
+console.log(a,b)
+
+
+</script>

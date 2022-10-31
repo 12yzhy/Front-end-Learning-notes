@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实现深克隆</title>
+</head>
+<body>
+        <script>
+       
+
+
+
+
+    //引申
+    //  如何拷贝一个函数
+    // 例子
+    // 1
+    function func(a,b,c){
+        return a+b+c
+    }
+   
+        // 方式1， 很多函数库都是用这个方法
+    var closeFunc = new Function('return ' + func.toString())();
+
+    // 方式2 // 利用bind 返回函数
+    var closeFunc = func.prototype.bind({});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+
+</body>
+</html>

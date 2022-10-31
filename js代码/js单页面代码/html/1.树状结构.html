@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            height: 200vh;
+            width: 200px;
+            border: 1px solid #000;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="box">2212</div>
+    <script>
+        //  console.log('first');
+        // let arr = [
+        //     {id: 1, name: '部门1', pid: 0},
+        //     {id: 2, name: '部门2', pid: 1},
+        //     {id: 3, name: '部门3', pid: 1},
+        //     {id: 4, name: '部门4', pid: 3},
+        //     {id: 5, name: '部门5', pid: 4},
+        // ]
+        // [
+        //     {
+        //         "id": 1,
+        //         "name": "部门1",
+        //         "pid": 0,
+        //         "children": [
+        //             {
+        //                 "id": 2,
+        //                 "name": "部门2",
+        //                 "pid": 1,
+        //                 "children": []
+        //             },
+        //             {
+        //                 "id": 3,
+        //                 "name": "部门3",
+        //                 "pid": 1,
+        //                 "children": [
+        //                     // 结果 ,,,
+        //                 ]
+        //             }
+        //         ]
+        //     }
+        // ]
+        // ((arr)=>{
+        //     // 先找到父节点
+        //     var parent =arr.fliter(el=>el.pid==0)
+        //     var child=arr.fliter(el=>el.pid!==0)
+        //    const depen= (parent,child)=>{
+        //     parent.forEach(pel=>{
+        //         child.forEach((cel,cindex)=>{
+        //             if(cel.pid==pel.pid){
+        //                 // clone 子数组
+        //                 let newChild=JSON.parse(JSON.stringify(child))
+        //                 newChild.splice(cindex,1)
+        //                 depen([cel],newChild)
+        //                 pel.child? pel.child.push(cel):pel.child=[cel]
+        //             }
+        //         })  
+        //     })
+        //    }
+        //    depen(parent,child)
+        //    console.log(parent);
+        //    return parent
+        // })(arr)
+         
+
+
+        function throttle (fn,delay ){
+            let prev=new Date().getTime()
+            return function (){
+
+            }
+        }
+        // window.onscroll=throttle(function(){
+        //     console.log('11213')
+        // },2000)
+ 
+        // 防抖，当事件触发时延迟n秒执行，若在延迟时间中再次触发择清除延时器，再次计时，直到n秒内无操作，执行事件
+        function denbouce (fn ,delay){
+          let timerd=null
+          return ()=>{
+            clearTimeout(timerd)
+            timerd=setTimeout(()=>{
+                fn.apply(this.arguments)
+                console.log('防抖')
+                // fn()
+            },delay)
+          }
+        }   
+        function test (){
+            console.log('this1==>',this)
+        }
+        // test()
+        denbouce(test,1000)
+    
+        
+    
+    </script>
+    
+</body>
+</html>

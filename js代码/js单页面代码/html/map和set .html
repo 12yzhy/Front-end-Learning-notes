@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    //    let a=Symbol(1)
+    //    let b=Symbol(1)  
+    //    console.log(a,b,a===b)
+    
+    //    map和weakMap   
+       var map1=new Map([['user','小如'],['num',99]])
+       console.log(map1)
+    //    变值和塞值
+       map1.set('user','老子')
+       map1.set('user1','孔子')
+        let str= map1.get('user')
+       console.log(map1,str)
+    //  key是个对象
+    //    var obj ={name:"小如",age:9}
+    //     let map = new Map()
+    //     map.set(obj,"111")
+    //    console.log(map)
+
+    //    var arr=[1,2,3,3]
+    //    let arr1=new Set(arr)
+    //    console.log(arr1)
+
+
+
+
+
+
+
+       var arr =new Array(lng).fill(2)
+       var lng=100
+       let map2 =new Map()
+       for(var i=0;i<lng;i++){
+            arr[i]=i
+            map2.set(i,arr[i])
+     }
+          console.log('map2==>',map2)
+         // Map
+        console.time()
+        for(var j=0;j<lng;j++){
+        map2.has(j)
+        }
+        console.timeEnd()
+        console.log(null*1,''*1,undefined*1)
+        console.log( typeof  10n)
+        console.log(10n===BigInt(10))
+        console.log(10n===BigInt('10'))
+    
+
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

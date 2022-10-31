@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /* 
+            三种状态,promise只以第一次为准，第一次成功就永久为fulfilled，第一次失败就永远状态为rejected  (状态不可逆)
+            Promise中有throw的话，就相当于执行了reject
+        
+        
+        */
+
+        class MyPromise{
+                constructor(executor){
+              
+                    this.initBind()
+                    this.initValue()
+                    // 执行传进来的函数
+                    try{
+                        executor(this.resolve,this.reject)
+                    }catch(e){
+                        this.reject(e)
+                    }
+                }
+                initValue(){
+                    // 初始化值
+                    this.promiseResult=null//终值
+                    this.promiseState='pedding'//状态  
+                    // promise中有定时器的情况
+                    this.onFulfilledCallbacks=[]//保存成功回调
+                    this.onRejectedCallbacks=[]//保存失败回调
+                }
+                initBind(){
+                    // 初始化this
+                    this.resolve=this.resolve.bind(this)  
+                    this.reject=this.reject.bind(this)  
+                }
+                resolve(value){
+                    // 执行reslove 将pedding改为fulfilled ,且不可逆
+                    if(this.promiseState!=='pedding') return
+                    this.promiseState='fulfilled'
+                    // 终止为传进来的值
+                    this.promiseResult=value
+                    while(this.onFulfilledCallbacks.length){
+                        //  shift  从数组最前删除一个元素 后返回被删元素（即then时被push的第一个onFulfilled ==> 用这个onFulfilled返回结果出去
+                        this.onFulfilledCallbacks.shift()(this.promiseResult)
+                    }
+                }
+                reject(reson){
+                    // 执行reject 将pedding改为rejected
+                    if(this.promiseState!=='pedding') return
+                    this.promiseState='rejected'
+                    // 终止为传进来的reson
+                    this.promiseResult=reson
+                    //  执行==》（then时保存）的失败回调
+                    while(this.onRejectedCallbacks.length){
+                        //  shift  从前删除后返回被删元素
+                        this.onRejectedCallbacks.shift()(this.promiseResult)
+                    }
+                }
+
+                /*then 方法内部做的事情就是状态判断
+                    如果状态是成功，调用成功回调函数
+                    如果状态是失败，调用失败回调函数
+                    then接收(外部传入的)两个回调，一个是成功回调，一个是失败回调
+                        当Promise状态为fulfilled执行成功回调，为rejected执行失败回调
+                        如resolve或reject在定时器里，则定时器结束后再执行then
+
+                    TODO 这里还要多看看   then 它的微任务特性没写 
+                    参考：  
+                       https://juejin.cn/post/6994594642280857630#heading-8  林三心的掘金
+                     https://juejin.cn/post/6945319439772434469#heading-19
+                then支持链式调用，下一次then执行受上一次then返回值的影响
+                        1、then方法本身会返回一个新的Promise对象
+                    2、如果返回值是promise对象，返回值为成功，新promise就是成功
+                    3、如果返回值是promise对象，返回值为失败，新promise就是失败
+                    4、如果返回值非promise对象，新promise对象就是成功，值为此返回值
+
+                */
+                then(onFulfilled,onRejected){
+                            // 校验参数
+                        onFulfilled= typeof onFulfilled==='function' ? onFulfilled: val => val
+                        onRejected = typeof onRejected ==='function' ? onRejected : reason => { throw reason }  
+                        // // 为了链式调用这里直接创建一个 MyPromise，并在后面 return 出去
+                        const thenPromise=new MyPromise((resolve,reject)=>{
+                            // 
+                                const resolvePromise=cb=>{
+                                        try{
+                                            const x=cb(this.promiseResult)
+                                            if(x===thenPromise){
+                                                throw new Error('不能返回自身')
+                                            }
+                                             // 判断x是不是 MyPromise 实例对象
+                                            if(x instanceof MyPromise){
+                                                    x.then(resolve,reject)
+                                            }else{
+                                                // 非Promise就直接成功
+                                                resolve(x)
+                                            }
+                                        }catch(err){
+                                            // 处理报错
+                                            reject(err)
+                                            throw new Error(err)
+                                        }
+                                }
+
+                                if(this.promiseState==='fulfilled'){
+                                // 如果当前为成功状态，执行第一个回调
+                                resolvePromise(onFulfilled)
+                                }if(this.promiseState==='rejected'){
+                                    resolvePromise(onRejected)
+                                }else if(this.promiseState==='pedding'){
+                                    // 如果状态为待定状态，暂时保存两个回调
+                                    // （因为promise内有延时器，then会先执行，此时为待定状态 固而要存起外部回调 当延时器中的resolve执行后再从存回调的数组中调用外部回调）
+                                    this.onFulfilledCallbacks.push(resolvePromise.bind(this,onFulfilled))
+                                    this.onRejectedCallbacks.push(resolvePromise.bind(this,onRejected))
+                                }
+                        })
+                        return thenPromise
+
+
+
+                      
+
+              
+
+                }
+        }
+        
+        const test1 = new MyPromise((resolve, reject) => {
+            resolve('成功1')
+        }).then(res=> console.log(res), err=> console.log(err))
+        const test2 = new MyPromise((resolve, reject) => {
+            setTimeout(()=>{
+                    //   reject('失败2')
+                resolve('成功2')
+            },3000)
+        }).then(res=> console.log(res), err=> console.log(err))
+        // const test2 = new Promise((resolve, reject) => {
+        //     reject('失败3')
+        //     resolve('成功3')
+        // }).then(res=> console.log(res), err=> console.log(err))
+    
+        
+        // console.log(test1)
+        // console.log(test2)
+
+
+
+
+
+
+    </script>
+</body>
+</html>

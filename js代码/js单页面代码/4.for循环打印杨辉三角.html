@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打印杨辉三角</title>
+    <style>
+        span{
+           color: azure; 
+        }
+    </style>
+</head>
+<body>
+    <script>
+            for(let m=0;m<5;m++){
+                for(let n=0;n<m+1;n++){
+                    document.write(' & ')
+                }
+                document.write('<br/>')
+            }
+
+
+
+
+
+
+
+
+
+        function te(n){
+            for(let i=1;i<n;i++){
+                for(let j=n-i;j>0;j--){
+                    document.write('<span>^</span>')
+                }
+                for(let n=i*2-1;n>0;n--){
+                    document.write(' * ')
+                }
+    
+                document.write('<br/>')
+            }
+
+        }
+
+        te(5)
+
+
+    </script>
+</body>
+</html>

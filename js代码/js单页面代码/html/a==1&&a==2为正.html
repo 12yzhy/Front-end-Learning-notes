@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        
+       
+        // 一 利用==的隐式转换
+        // 当两个类型不同时进行==比较时，会将一个类型转为另一个类型，然后再进行比较。 
+        // 比如Object类型与Number类型进行比较时，Object类型会转换为Number类型。 
+        // Object转换为Number时，会尝试调用Object.valueOf()和Object.toString()来获取对应的数字基本类型。
+        
+        // ## 1
+        let a={
+            i:1,
+            // valueOf:()=>{
+            //     return a.i++
+            // }
+            toString:()=>{
+                return a.i++
+            }
+        }
+        console.log(a==1&&a==2&&a==3)
+        // 1、 在进行对象转换时（例如:alert(a)）,将优先调用toString方法，如若没有重写toString将调用valueOf方法，如果两方法都没有重写，按Object的toString输出。
+      
+        //## 2 
+        let b=[1,2,3]
+        /*
+            数组调用toString()会隐含调用Array.join()方法 而数组shift方法的用法：shift() 方法用于把数组的第一个元素从其中删除，并返回第一个元素的值。
+        */
+            b.join=b.shift
+        console.log(b==1&&b==2&&b==3)
+        // 二 对象 数据劫持
+        var val=0
+        Object.defineProperty(window,'c',{
+            get:function(){
+                return ++val
+            }
+        })  
+        console.log(c==1&&c==2&&c==3)
+
+
+        let arr = [10, 20, 30, 40]; 
+        result = arr.reduce((N, item) => {
+            // 第一次：10 20
+            // 第二次：30 30
+            // 第三次: 60 40
+            // ...
+            // reduce只传递一个回调函数，那么N第一次默认是第一项，后续的N是上一次函数执行的处理结果
+            console.log(N, item);
+            return N + item;
+        });
+          console.log(result); 
+
+
+    </script>
+    
+</body>
+</html>

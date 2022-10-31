@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // ---------------------数组对象去重------------------
+        var arr = [{
+        key: '01',
+        value: '乐乐'
+        }, {
+        key: '02',
+        value: '博博'
+        }, {
+        key: '03',
+        value: '淘淘'
+        },{
+        key: '04',
+        value: '哈哈'
+        },{
+        key: '01',
+        value: '乐乐'
+          }];
+            //  方法1：利用对象访问属性的方法，判断对象中是否存在key
+            var res=[]
+            var obj={}
+            for(var i=0;i<arr.length;i++){
+                if(!obj[arr[i].key]){
+                    res.push(arr[i])
+                   obj[arr[i].key]=true
+                }
+            }
+            console.log(res,obj)
+            /*  obj==>{01: true 02: true 03: true 04: true}*/
+
+
+      // 法二   reduce(这里还是利用对象的唯一性)
+       var obj={}   
+            arr =arr.reduce((item,next)=>{
+            obj[next.key] ?'':obj[next.key] =true&&item.push(next)
+            return item
+          },[])
+          console.log(arr)
+            // 法三 利用map对象
+            function fn(arr,map=new Map()){
+              // console.log(map)
+              arr.forEach(el=>!map.has(el.key)&&map.set(el.key,el))
+             return [...map.values()]
+            }
+           
+            console.log('map对象',fn(arr))
+           
+          console.log('----------------这里是数组------------------------')
+        //   单纯数组去重
+          var arr1 = [1,1,'true','true',true,true,15,15,false,false, undefined,undefined, null,null, NaN, NaN,'NaN', 0, 0, 'a', 'a',{},{}];
+        //   1   用上set()
+          var arr2=[...new Set(arr1)]
+        //   var arr2=Array.from(new Set(arr1))
+           console.log(arr2) // [1, "true", true, 15, false, undefined, null, NaN, "NaN", 0, "a", {}, {}]
+            //    不考虑兼容性，这种去重的方法代码最少。这种方法还无法去掉“{}”空对象
+        
+        // 2 利用 hasOwnProperty
+        function unique(arr) {
+            var obj = {};
+            return arr.filter(function(item, index, arr){
+                return obj.hasOwnProperty(typeof item + item) ? false : (obj[typeof item + item] = true)
+            })
+        }
+            console.log(unique(arr1))
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript">
+        let up =Symbol()
+        let down=Symbol()
+        let obj={
+            name:'test',
+            [up]:function(){
+                    console.log('first')
+                }  ,
+                [down]:function(){
+                    console.log('down')
+             }
+        }
+        obj[up]()//up
+        obj[down]() //down
+        console.log(obj)
+
+
+
+        // padStart()和padEnd()一共接受两个参数，第一个参数用来指定字符串的最小长度，第二个参数是用来补全的字符串
+        let str='10'.padStart(10,'YYYY-MM-dd')//从左侧补，超出了第一个参数限制，也只保留左侧
+        let str1='10'.padEnd(10,'YYYY-MM-dd')//从右侧补，超出了第一个参数限制，也只保留左侧
+        console.log(str,str1)  //YYYY-MM-10 10YYYY-MM-
+       
+       
+       
+
+
+
+
+
+
+    </script>
+    
+</body>
+</html>

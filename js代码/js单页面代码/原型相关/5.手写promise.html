@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // https://blog.csdn.net/zl13015214442/article/details/96744447?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-96744447-blog-124249795.pc_relevant_multi_platform_featuressortv2dupreplace&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-96744447-blog-124249795.pc_relevant_multi_platform_featuressortv2dupreplace&utm_relevant_index=1
+        // 实现Promise.finally
+        Promise.prototype.finally=function(callback){
+            return this.then((value)=>{
+                return Promise.resolve(callback()).then(()=>{
+                    return value
+                })
+            },(err)=>{
+                return Promise.resolve(callback()).then(()=>{
+                    throw error
+                })
+            })
+
+        }
+
+
+    </script>
+</body>
+</html>
