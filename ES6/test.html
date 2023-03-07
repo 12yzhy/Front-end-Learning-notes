@@ -1,0 +1,87 @@
+<script>
+  // 代理对象
+  const obj = { name: "啥", age: 900 };
+  const objProxy = new Proxy(obj, {
+    get(tar, key, receiver) {
+      console.log(`访问了${key}属性`, tar, receiver);
+      return tar[key];
+    },
+    set(tar, key, value) {
+      console.log("赋值了", tar[key]);
+      tar[key] = value;
+    },
+  });
+  console.log(objProxy, objProxy.age);
+
+  //   console.log((objProxy.age += 1));
+  // 代理数组
+  let arr = [
+    {
+      title: "这是一首简单的歌",
+    },
+    {
+      title: "没有什么独特",
+    },
+  ];
+  let handle = {
+    get(target, key) {
+      const { title } = target[key];
+      let max = 3;
+      target[key].title =
+        title.length > max ? title.substr(0, max) + ".".repeat(3) : title;
+      return target[key].title;
+    },
+  };
+  const arrProxy = new Proxy(arr, handle);
+  console.log(arrProxy[0]);
+
+  console.log("-----------------Reflect(反射)-----");
+
+  const objProxy1 = new Proxy(obj, {
+    get: function (target, key) {
+      console.log(`监听到访问${key}属性`, target);
+      return Reflect.get(target, key); //改为Reflect.get
+    },
+    set: function (target, key, newValue) {
+      console.log(`监听到给${key}属性设置值`, target);
+      Reflect.set(target, key, newValue); //改为Reflect.set
+    },
+  });
+
+  console.log(objProxy1.name);
+
+  objProxy.name = "wx";
+  /* 之前的方式是说到底还是在操作原对象，
+  因为都是在用target、key等直接去操作，改用Reflect就真正意义上不直接操作原对象 */
+  console.log("--------------------receiver-----");
+  const obj1 = {
+    _name: "cj",
+    age: 18,
+    get name() {
+      return this._name; //this === objProxy
+    },
+    set name(newValue) {
+      this._name = newValue;
+    },
+  };
+
+  // 将receiver传递给Reflect，然后Reflect执行get存取描述符，这个时候的this就是指向objProxy这个代理对象了。通过this访问也就会触发捕获器了。
+  const objProxy2 = new Proxy(obj1, {
+    get: function (target, key, receiver) {
+      console.log(`监听到访问${key}属性`, target[key], target);
+      return Reflect.get(target, key, receiver); //将receiver传递给Reflect.get
+    },
+    set: function (target, key, newValue, receiver) {
+      console.log(`监听到给${key}属性设置值`, target[key], target);
+      Reflect.set(target, key, newValue, receiver);
+    },
+  });
+
+  console.log(objProxy2.name);
+  //第一次打印：console.log(`监听到访问name属性`,'cj',{_name:"cj",age:18})
+  //第二次打印：console.log(`监听到访问_name属性`,'cj',{_name:"cj",age:18})
+
+  Object.assign(obj, { name: "", age: null });
+
+  console.log(obj);
+</script>
