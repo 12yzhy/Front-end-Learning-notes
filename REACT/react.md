@@ -65,3 +65,119 @@ diff 算法：对 dom 进行 different 比较不同的一种算法（虚拟）
 类组件在处理复杂逻辑和状态管理时更加灵活和强大，而函数式组件在处理简单组件和纯展示组件时更加简单和高效。
 
 在 React 16.8 版本之前，类组件是唯一一种可以使用 React 的钩子函数的组件类型。而在 React 16.8 版本之后，函数式组件也可以使用钩子函数，使得函数式组件更加灵活和强大。
+
+
+
+## 6 如何使用usecontex和useReducer模拟redux
+```js
+import React, { createContext, useContext, useState ，useReducer} from 'react';
+// 创建上下文
+const CountContext = createContext(undefined);
+
+// 创建Reducer 函数
+const reducer = (state, action) => {
+    switch (action.type) {
+      case 'INCREMENT':
+        return { ...state, count: state.count + 1 };
+      case 'DECREMENT':
+        return { ...state, count: state.count - 1 };
+        case 'ADDTEN':
+            return { ...state, count: state.count+action.payload };
+      default:
+        return state;
+    }
+  };
+
+// 提供器组件
+const CountProvider: React.FC = ({ children }) => {
+   const [state, dispatch] = useReducer(reducer, {
+    count: 0,
+    nameSpace:'ceishi'
+  });
+const contextValue: CountContextProps = {
+    count,
+    dispatch,
+  };
+  return (
+    <CountContext.Provider value={contextValue}>
+      {children}
+    </CountContext.Provider>
+  );
+};
+
+// 消费者组件
+const Counter: React.FC = () => {
+  const { count, dispatch } = useContext(CountContext)!;
+ const increment = () => {
+            dispatch({ type: 'INCREMENT' });
+          };
+        
+          const decrement = () => {
+            dispatch({ type: 'DECREMENT' });
+          };
+  
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+};
+
+// 应用程序组件
+const App: React.FC = () => {
+  return (
+    <CountProvider>
+      <Counter />
+    </CountProvider>
+  );
+};
+
+export default App;
+
+
+```
+
+## 7 dva流程   
+   dispatch 一个对象（包含type和payload），到effect中，effect会put到reducers  会更改state值
+
+
+## 8 dva 中的connect方法是基于 react-redux 库实现的，那么react-redux中的connect如何实现？
+`react-redux` 提供的 `connect` 函数是基于 React 的上下文（context）和高阶组件（Higher-Order Component，HOC）的原理来实现的。下面是 `connect` 函数的大致实现流程：
+
+1. 首先，`connect` 函数接收两个参数：`mapStateToProps` 和 `mapDispatchToProps`。
+
+2. 当被连接的组件被渲染时，`connect` 函数会创建一个新的高阶组件。
+
+3. 这个高阶组件会通过 React 的上下文（context）向下传递数据模型的状态和派发 action 的方法。
+
+4. 在高阶组件内部，它会获取数据模型的状态和派发 action 的方法，并将它们作为属性传递给被连接的组件。
+
+5. 当数据模型的状态发生变化时，高阶组件会重新渲染，并将最新的状态作为属性传递给被连接的组件。
+
+6. 当被连接的组件需要派发 action 时，它会通过高阶组件提供的方法来触发对数据模型的更新操作。
+
+具体而言，`connect` 函数的实现可以分为以下几个步骤：
+
+1.（重点） 在高阶组件内部，通过 `React.createContext()` 创建一个 React 上下文对象，用于传递数据模型的状态和派发 action 的方法。
+
+2. 在高阶组件的 `componentDidMount` 生命周期函数中，订阅数据模型的状态变化，并将最新的状态更新到高阶组件的状态中。
+
+3. 在高阶组件的 `componentWillUnmount` 生命周期函数中，取消对数据模型状态变化的订阅。
+
+4.（重点） 在高阶组件的 `render` 方法中，将数据模型的状态和派发 action 的方法作为属性传递给被连接的组件。
+
+5. 在被连接的组件中，通过 `this.props` 访问数据模型的状态和派发 action 的方法。
+
+总的来说，`connect` 函数的实现利用了 React 的上下文和生命周期方法，以及高阶组件的特性，实现了将数据模型与组件进行连接的功能。通过这种方式，组件可以轻松地访问数据模型的状态，并触发对数据模型的更新操作。
+
+## 9 react可以提升性能的hook有哪些
+## 10 react.memo()方法第二个参数是什么，什么作用
+## eventloop详细解释
+## 一个页面从输入url地址到展示出来经历了写什么 细说包括（缓存，tcp怎么链接，渲染怎么渲染的）
+## 常见的请求头响应头
+## 请求头里面的options是什么
+
+
