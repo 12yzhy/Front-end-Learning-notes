@@ -174,10 +174,23 @@ export default App;
 总的来说，`connect` 函数的实现利用了 React 的上下文和生命周期方法，以及高阶组件的特性，实现了将数据模型与组件进行连接的功能。通过这种方式，组件可以轻松地访问数据模型的状态，并触发对数据模型的更新操作。
 
 ## 9 react可以提升性能的hook有哪些
+  useMemo
+  useCallback
+  useRef
+  useImperativeHandle
+  useLayoutEffect
+  useDebugValue
+
 ## 10 react.memo()方法第二个参数是什么，什么作用
-## eventloop详细解释
-## 一个页面从输入url地址到展示出来经历了写什么 细说包括（缓存，tcp怎么链接，渲染怎么渲染的）
-## 常见的请求头响应头
-## 请求头里面的options是什么
+第二个参数是一个函数，用于判断两个props是否相同。如果返回true，则不会重新渲染组件；如果返回false，则重新渲染组件。
 
+## 11 react 的设计思想
+ 1. 组件化==> 开闭原则 封闭：组件内部状态自身维护只处理内部渲染逻辑
+                       开放：组件通信，不同组件props单项数据流进行交互
 
+2. 数据驱动视图
+ ui= f(data)
+不能直接操作dom 修改数据state props 数据驱动视图更新
+3. 虚拟dom 
+  1. DOM  操作消耗性能  ==>vDOM    
+   2. new vdom old vdom diff  ==>增量更新

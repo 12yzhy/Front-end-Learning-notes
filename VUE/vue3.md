@@ -56,3 +56,131 @@ Vue 3 在虚拟 DOM 的 diff（差异）算法方面进行了一些优化，以�
 需要注意的是，这仅是一些 Vue 3 在 diff 算法方面的优化，实际上 Vue 3 还有其他方面的改进，如编译器的优化、渲染流程的优化等，这些综合起来使得 Vue 3 在性能方面相较于 Vue 2 有了显著的提升。
 
 希望能解答你的问题！如果还有其他疑问，请随时提问。
+
+
+# 6.5 vue2 双指针和vue3 最长递增子序列
+# 7 nextick 作用和原理
+1. 作用：在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+2. 原理：在 Vue 2 中，nextTick 实现原理是利用了宏任务和微任务，在下次 DOM 更新循环结束之后执行延迟回调。在 Vue 3 中，nextTick 实现原理是利用了 Promise，在微任务队列中添加一个回调函数，当所有微任务执行完毕后执行延迟回调。
+源码位置：/src/core/util/next-tick.js 
+其中  timerFunc函数定义，这里是根据当前环境支持什么方法则确定调用哪个，分别有：
+
+Promise.then、MutationObserver、setImmediate、setTimeout
+## 7.1 MutationObserver怎么使用
+`MutationObserver` 是一种能够响应DOM树变动的Web API，它可以观察到几乎所有类型的DOM变动，包括属性和子节点的变动。使用 `MutationObserver` 可以实现以前只能通过 `Mutation Events` （已废弃）来完成的任务。
+
+以下是如何使用 `MutationObserver` 的基本步骤：
+
+### 1. 创建 `MutationObserver` 实例
+
+```javascript
+const observerCallback = (mutationsList, observer) => {
+  // 处理变动列表
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      console.log('A child node has been added or removed.');
+    } else if (mutation.type === 'attributes') {
+      console.log(`The ${mutation.attributeName} attribute was modified.`);
+    }
+  }
+};
+
+const observer = new MutationObserver(observerCallback);
+```
+
+### 2. 配置观察者
+
+你需要指定两个东西来配置观察者：
+
+- 目标节点（要观察的DOM元素）。
+- 观察选项（要观察哪些变动）。
+
+```javascript
+const targetNode = document.getElementById('some-id');
+const config = {
+  attributes: true, // 观察属性变动
+  childList: true,  // 观察子节点的增减变动
+  subtree: true     // 观察后代节点
+};
+
+observer.observe(targetNode, config);
+```
+
+### 3. 处理变动
+
+在 `observerCallback` 函数中，你将接收到一个 `mutationsList` 对象，它包含了所有自上一次通知以来发生的变动。每个变动都是一个 `MutationRecord` 对象，它包含了变动的详细信息。
+
+### 4. 停止观察
+
+如果你希望停止观察，可以调用 `MutationObserver` 的 `disconnect` 方法。
+
+```javascript
+observer.disconnect();
+```
+
+### 示例
+
+下面是一个完整的例子，展示了如何使用 `MutationObserver` 观察一个DOM元素的属性和子节点变动：
+
+```javascript
+// 1. 创建观察者实例，传入回调函数
+const observerCallback = (mutationsList) => {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'attributes') {
+      console.log(`Attribute ${mutation.attributeName} was ${mutation.oldValue} and is now ${mutation.target[mutation.attributeName]}`);
+    }
+    if (mutation.type === 'childList') {
+      console.log('A child has been added or removed.');
+    }
+  }
+};
+
+const observer = new MutationObserver(observerCallback);
+
+// 2. 选择目标节点
+const targetNode = document.querySelector('#some-id');
+
+// 3. 配置观察选项
+const config = {
+  attributes: true,  // 观察属性变动
+  childList: true,   // 观察子节点的增减变动
+  subtree: true      // 观察后代节点
+};
+
+// 4. 开始观察
+observer.observe(targetNode, config);
+
+// 5. 停止观察
+// observer.disconnect();
+```
+
+使用 `MutationObserver` 可以非常精确地响应DOM的变动，非常适合需要对DOM变动做出响应的高级应用场景。不过也要注意，过度使用可能会对性能产生影响，因为每次DOM变动都会触发回调函数。
+ 
+# 8 说一下vue中effect 收集依赖
+
+
+
+
+# 9 monorepo  软、硬连接  element-plus 源码
+# 10 vite ==>rollup（开发） +esbuild(生产)
+# 11 两套系统 ==>单点登录 ==>sso   
+# 12 vue 响应式原理本质
+函数与数据的关联
+函数：
+vue2 watcher 
+vue3 effect、render watcheffect、computed watch
+数据：响应式数据、必须在函数中用到
+
+数据改变，render等函数重新执行 
+
+# 13 为甚么需要虚拟Dom 
+在vue中，渲染视图会调用render函数，这种渲染不仅发生在组件创建时，同时发生在视图依赖的数据更新时。如果在渲染时，直接使用真实DOM，由于真实DOM的创建、更新、插入等操作会带来大量的性能损耗
+八股文的说法是操作真实dom耗费性能，虚拟dom更高效
+真实情况有两个方面考虑
+1. 框架设计：从框架设计的角度，（它是数据驱动的当数据变化时，框架不知道哪个地方需要改动，它只能全量更新一遍，如果不断更新但这样对浏览器的性能消耗太高，退而求其次有了虚拟dom）虚拟dom可以提高框架的性能和效率。虚拟dom可以减少对真实dom的频繁操作，从而减少浏览器的重绘和重排。
+而sevlte可以在
+2. 跨平台：虚拟dom还可以用于跨平台开发。在移动端开发中，虚拟dom可以减少对原生平台的依赖，提高跨平台开发的效率。
+
+## 13.1  什么是虚拟dom？
+虚拟dom本质上就是一个普通的JS对象，
+用于描述视图的界面结构在vue中，每个组件都有一个render函数，每个render函数都会返回一个虚拟dom树，这也就意味着每个组件都对应一棵虚拟DOM树
